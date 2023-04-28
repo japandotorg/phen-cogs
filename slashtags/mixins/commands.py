@@ -93,7 +93,7 @@ class Commands(MixinMeta):
         Slash Tag management with TagScript.
 
         These commands use TagScriptEngine.
-        [This site](https://phen-cogs.readthedocs.io/en/latest/index.html) has documentation on how to use TagScript blocks.
+        [This site](https://guide.melonbot.io/docs/category/custom-commands) has documentation on how to use TagScript blocks.
         """
 
     @commands.mod_or_permissions(manage_guild=True)
@@ -108,7 +108,7 @@ class Commands(MixinMeta):
         """
         Add a slash tag with TagScript.
 
-        [Slash tag usage guide](https://phen-cogs.readthedocs.io/en/latest/slashtags/slashtags.html)
+        [Slash tag usage guide](https://guide.melonbot.io/docs/slashtags/creation)
         """
         await self.create_slash_tag(ctx, tag_name, tagscript, is_global=False)
 
@@ -310,7 +310,7 @@ class Commands(MixinMeta):
         """
         Add a message command tag with TagScript.
 
-        [Slash tag usage guide](https://phen-cogs.readthedocs.io/en/latest/slashtags/slashtags.html)
+        [Slash tag usage guide](https://guide.melonbot.io/docs/slashtags/creation)
         """
         await self.create_slash_tag(
             ctx, tag_name, tagscript, is_global=False, command_type=ApplicationCommandType.MESSAGE
@@ -328,7 +328,7 @@ class Commands(MixinMeta):
         """
         Add a user command tag with TagScript.
 
-        [Slash tag usage guide](https://phen-cogs.readthedocs.io/en/latest/slashtags/slashtags.html)
+        [Slash tag usage guide](https://guide.melonbot.io/docs/slashtags/creation)
         """
         await self.create_slash_tag(
             ctx, tag_name, tagscript, is_global=False, command_type=ApplicationCommandType.USER
@@ -382,7 +382,7 @@ class Commands(MixinMeta):
         """
         Edit a slash tag's arguments.
 
-        See [this documentation page](https://phen-cogs.readthedocs.io/en/latest/slashtags/slash_arguments.html) for more information on slash tag arguments.
+        See [this documentation page](https://guide.melonbot.io/docs/slashtags/arguments) for more information on slash tag arguments.
         """
         await tag.edit_options(ctx)
 

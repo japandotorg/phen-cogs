@@ -56,7 +56,7 @@ TAG_GLOBAL_LIMIT = 250
 
 TAG_RE = re.compile(r"(?i)(\[p\])?\btag'?s?\b")
 
-DOCS_URL = "https://phen-cogs.readthedocs.io/en/latest"
+DOCS_URL = "https://guide.melonbot.io/docs/category/custom-commands"
 
 log = logging.getLogger("red.phenom4n4n.tags.commands")
 
@@ -232,7 +232,7 @@ class Commands(MixinMeta):
         Tag management with TagScript.
 
         These commands use TagScriptEngine.
-        Read the [TagScript documentation](https://phen-cogs.readthedocs.io/en/latest/) to learn how to use TagScript blocks.
+        Read the [TagScript documentation](https://guide.melonbot.io/docs/category/custom-commands) to learn how to use TagScript blocks.
         """
 
     @commands.mod_or_permissions(manage_guild=True)
@@ -247,7 +247,7 @@ class Commands(MixinMeta):
         """
         Add a tag with TagScript.
 
-        [Tag usage guide](https://phen-cogs.readthedocs.io/en/latest/tags/blocks.html#usage)
+        [Tag usage guide](https://guide.melonbot.io/docs/custom-commands/blocks)
 
         **Example:**
         `[p]tag add lawsofmotion {embed(title):Newton's Laws of motion}
@@ -311,7 +311,7 @@ class Commands(MixinMeta):
         Edit a tag's TagScript.
 
         The passed tagscript will replace the tag's current tagscript.
-        View the [TagScript docs](https://phen-cogs.readthedocs.io/en/latest/blocks.html) to find information on how to write valid tagscript.
+        View the [TagScript docs](https://guide.melonbot.io/docs/custom-commands/blocks) to find information on how to write valid tagscript.
 
         **Example:**
         `[p]tag edit rickroll Never gonna give you up!`
@@ -436,34 +436,19 @@ class Commands(MixinMeta):
         await self.show_tag_usage(ctx, ctx.guild)
 
     @tag.command("docs")
-    async def tag_docs(self, ctx: commands.Context, keyword: str = None):
+    async def tag_docs(self, ctx: commands.Context):
         """
         Search the TagScript documentation for a block.
 
-        https://phen-cogs.readthedocs.io/en/latest/
+        https://guide.melonbot.io/docs/category/custom-commands
 
         **Example:**
         `[p]tag docs embed`
         """
         async with ctx.typing():
             e = discord.Embed(color=await ctx.embed_color(), title="Tags Documentation")
-            if keyword:
-                matched_labels = await self.doc_search(keyword)
-                description = [f"Search for: `{keyword}`"]
-                for name, url in matched_labels.items():
-                    description.append(f"[`{name}`]({url})")
-                url = f"{DOCS_URL}/search.html?q={quote_plus(keyword)}&check_keywords=yes&area=default"
-                e.url = url
-                embeds = []
-                description = "\n".join(description)
-                for page in pagify(description):
-                    embed = e.copy()
-                    embed.description = page
-                    embeds.append(embed)
-                await menu(ctx, embeds)
-            else:
-                e.url = DOCS_URL
-                await ctx.send(embed=e)
+            e.url = DOCS_URL
+            await ctx.send(embed=e)
 
     @commands.is_owner()
     @tag.command("run", aliases=["execute"])

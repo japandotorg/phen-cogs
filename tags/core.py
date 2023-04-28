@@ -59,7 +59,7 @@ class Tags(
     """
     Create and use tags.
 
-    The TagScript documentation can be found [here](https://phen-cogs.readthedocs.io/en/latest/).
+    The TagScript documentation can be found [here](https://guide.melonbot.io/docs/category/custom-commands).
     """
 
     __version__ = "2.4.1"

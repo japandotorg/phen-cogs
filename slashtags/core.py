@@ -51,7 +51,7 @@ class SlashTags(Commands, Processor, commands.Cog, metaclass=CompositeMetaClass)
     """
     Create custom slash commands.
 
-    The TagScript documentation can be found [here](https://phen-cogs.readthedocs.io/en/latest/index.html).
+    The TagScript documentation can be found [here](https://guide.melonbot.io/docs/category/custom-commands).
     """
 
     __version__ = "1.0.0"
