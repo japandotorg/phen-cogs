@@ -227,7 +227,10 @@ class ReactRoles(MixinMeta):
                     duplicates[emoji] = role
                 else:
                     binds[emoji_id] = role.id
-                    await message.add_reaction(emoji)
+                    try:
+                        await message.add_reaction(emoji)
+                    except (discord.NotFound, discord.HTTPException):
+                        return await ctx.send("One or more emojis are invalid.")
             r["react_to_roleid"] = binds
         if duplicates:
             dupes = "The following groups were duplicates and weren't added:\n"
