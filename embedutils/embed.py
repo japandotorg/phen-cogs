@@ -323,7 +323,7 @@ class EmbedUtils(commands.Cog):
         self,
         ctx: commands.Context,
         channel: Optional[MessageableChannel],
-        *embed_names: StoredEmbedConverter,
+        *embed_names: GlobalStoredEmbedConverter,
     ):
         """Post global stored embeds."""
         channel = channel or ctx.channel
