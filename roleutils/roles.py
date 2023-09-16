@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import argparse
 import logging
 from collections import defaultdict
 from colorsys import rgb_to_hsv
@@ -35,7 +36,7 @@ from redbot.core.utils.mod import get_audit_reason
 from TagScriptEngine import Interpreter, LooseVariableGetterBlock, MemberAdapter
 
 from .abc import MixinMeta
-from .converters import FuzzyRole, StrictRole, TargeterArgs, TouchableMember
+from .converters import FuzzyRole, StrictRole, TargeterArgs, TouchableMember, RoleFlags
 from .utils import (
     can_run_command,
     guild_roughly_chunked,
@@ -314,6 +315,67 @@ class Roles(MixinMeta):
             msg.append(f"Removed **{role}** from {humanize_roles(success_members)}.")
         if already_members:
             msg.append(f"{humanize_roles(already_members)} didn't have **{role}**.")
+        await ctx.send("\n".join(msg))
+
+    @commands.has_guild_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
+    @role.command(name="custom")
+    async def role_custom(self, ctx: commands.Context, member: TouchableMember, *, options: str):
+        """Add and remove multiple roles in a single command."""
+        not_allowed = []
+        already_added = []
+        not_added = []
+        to_add = []
+        to_rm = []
+
+        parser: RoleFlags = RoleFlags()
+        parser.add_argument("--add", default=[], nargs="*", type=list, action="append")
+        parser.add_argument("--remove", default=[], nargs="*", type=list, action="append")
+
+        if not options:
+            await ctx.send_help()
+            return
+
+        args = parser.parse_args(options.split())
+
+        for role in args.add:
+            allowed = await is_allowed_by_role_hierarchy(self.bot, ctx.me, ctx.author, role)
+            if not allowed[0]:
+                not_allowed.append(role)
+            elif role in member.roles:
+                already_added.append(role)
+            else:
+                to_add.append(role)
+
+        for role in args.remove:
+            allowed = await is_allowed_by_role_hierarchy(self.bot, ctx.me, ctx.author, role)
+            if not allowed[0]:
+                not_allowed.append(role)
+            elif role not in member.roles:
+                not_added.append(role)
+            else:
+                to_rm.append(role)
+
+        reason = get_audit_reason(ctx.author)
+        msg = []
+        if to_add:
+            await member.add_roles(*to_add, reason=reason)
+            msg.append(f"Added {humanize_roles(to_add)} to **{member}**.")
+        if to_rm:
+            await member.remove_roles(*to_rm, reason=reason)
+            msg.append(f"Removed {humanize_roles(to_rm)} from **{member}**.")
+        if already_added:
+            msg.append(f"**{member}** already had {humanize_roles(already_added)}.")
+        if not_allowed:
+            msg.append(
+                f"You do not have permission to assign the roles {humanize_roles(not_allowed)}."
+            )
+        if not_added:
+            msg.append(f"**{member}** didn't have {humanize_roles(not_added)}.")
+        if not_allowed:
+            msg.append(
+                f"You do not have permission to assign the roles {humanize_roles(not_allowed)}."
+            )
         await ctx.send("\n".join(msg))
 
     @commands.has_guild_permissions(manage_roles=True)

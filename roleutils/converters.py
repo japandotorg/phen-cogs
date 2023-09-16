@@ -22,6 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import argparse
 from typing import List, Tuple, Union
 
 import discord
@@ -151,3 +152,8 @@ class TargeterArgs(commands.Converter):
                 f"No one was found with the given args.\nCheck out `{ctx.clean_prefix}target help` for an explanation."
             )
         return members
+
+
+class RoleFlags(argparse.ArgumentParser):
+    def error(self, message: str) -> None:
+        raise commands.BadArgument(message)
