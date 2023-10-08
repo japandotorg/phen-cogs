@@ -45,6 +45,7 @@ class ForceMention(commands.Cog):
     @checks.bot_has_permissions(manage_roles=True)
     @checks.admin_or_permissions(mention_everyone=True)
     @commands.command("forcemention")
+    @commands.cooldown(1, 10, commands.BucketType.member)
     async def cmd_forcemention(
         self, ctx: commands.Context, role: discord.Role, *, message: str = None
     ):
