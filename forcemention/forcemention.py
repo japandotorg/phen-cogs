@@ -23,9 +23,10 @@ SOFTWARE.
 """
 
 # this is a modified version of Bobloy's forcemention cog
+from typing import Any, Optional
 
 import discord
-from redbot.core import checks, commands
+from redbot.core import commands
 from redbot.core.bot import Red
 
 
@@ -34,20 +35,21 @@ class ForceMention(commands.Cog):
     Mention the unmentionables
     """
 
-    __version__ = "1.0.0"
+    __version__ = "1.0.1"
 
-    def __init__(self, bot: Red):
-        self.bot = bot
+    def __init__(self, bot: Red) -> None:
+        self.bot: Red = bot
 
-    async def red_delete_data_for_user(self, **kwargs):
+    async def red_delete_data_for_user(self, **kwargs: Any) -> None:
         return
 
-    @checks.bot_has_permissions(manage_roles=True)
-    @checks.admin_or_permissions(mention_everyone=True)
-    @commands.command("forcemention")
+    @commands.guild_only()
+    @commands.bot_has_permissions(manage_roles=True)
+    @commands.admin_or_permissions(mention_everyone=True)
     @commands.cooldown(1, 10, commands.BucketType.member)
+    @commands.command(name="forcemention", aliases=["fmention"])
     async def cmd_forcemention(
-        self, ctx: commands.Context, role: discord.Role, *, message: str = None
+        self, ctx: commands.Context, role: discord.Role, *, message: Optional[str] = None
     ):
         """
         Mentions that role, regardless if it's unmentionable.
@@ -59,10 +61,10 @@ class ForceMention(commands.Cog):
             await ctx.message.delete()
         except:
             pass
-        await self.forcemention(ctx.channel, role, message)
+        await self.forcemention(ctx.channel, role, message)  # type: ignore
 
     async def forcemention(
-        self, channel: discord.TextChannel, role: discord.Role, message: str, **kwargs
+        self, channel: discord.TextChannel, role: discord.Role, message: str, **kwargs: Any
     ):
         mention_perms = discord.AllowedMentions(roles=[role])
         me = channel.guild.me
